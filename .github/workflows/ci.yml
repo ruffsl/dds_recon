@@ -1,5 +1,7 @@
 on:
   push:
+    branchs:
+      - 'master'
   pull_request:
 
 name: CI
