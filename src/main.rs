@@ -1,4 +1,4 @@
-extern crate env_logger;
+extern crate pretty_env_logger;
 
 use clap::Parser;
 use rustdds::DomainParticipant;
@@ -14,7 +14,7 @@ struct Args {
 }
 
 fn main() {
-    env_logger::init();
+    pretty_env_logger::init();
     let args = Args::parse();
 
     let domain_participant = DomainParticipant::new(0).unwrap();
