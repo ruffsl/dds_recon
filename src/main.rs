@@ -1,22 +1,27 @@
-use clap::Parser;
+extern crate pretty_env_logger;
 
-/// Simple program to greet a person
+use clap::Parser;
+use rustdds::DomainParticipant;
+use std::{thread, time};
+
+/// Simple program to print dds discovery info
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
 struct Args {
-    /// Name of the person to greet
-    #[clap(short, long, value_parser)]
-    name: String,
-
-    /// Number of times to greet
-    #[clap(short, long, value_parser, default_value_t = 1)]
-    count: u8,
+    /// Number of seconds to wait for discovery
+    #[clap(short, long, value_parser, default_value_t = 3)]
+    timeout: u8,
 }
 
 fn main() {
+    pretty_env_logger::init();
     let args = Args::parse();
 
-    for _ in 0..args.count {
-        println!("Hello {}!", args.name)
+    let domain_participant = DomainParticipant::new(0).unwrap();
+    thread::sleep(time::Duration::from_secs(args.timeout.into()));
+
+    let discovered_topics = domain_participant.discovered_topics();
+    for discovered_topic in discovered_topics.iter() {
+        println!("discovered_topic: {}", discovered_topic.topic_name());
     }
 }
